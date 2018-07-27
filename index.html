@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    #images img {
+      display: inline;
+      vertical-align: top;
+      width: 10%;
+    }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <button class="btn" href="flower.html">1</button>
+  <button class="btn" href="box.html">2</button>
+  <button class="btn" href="gun.html">3</button>
+  <button class="json_button" href="">4</button>
+  <button class="data_button" href="">5</button>
+  <button class="data2_button" href="">6</button>
+
+
+
+
+  <form id="nameSearch" action="">
+    <p>Type in your name here</p>
+    First name:
+    <input type="text" name="fname" id="firstName">
+
+    <input type="submit" value="Submit">
+  </form>
+
+  <div class="console"></div>
+
+
+
+  <br/>
+  <br/>
+  <div class="add">New shit will be added here</div>
+  <div id="images"></div>
+  <p>Below is XML content lists</p>
+  <div class="XML_div"></div>
+  <p>Below is JSON object value lists</p>
+  <script>
+    $(document).ready(function () {
+
+      var NAMES = [];
+      var RESULTS = [];
+
+      $.ajax({
+        url: "./names.json",
+        success: function (results) {
+          console.log(results.names);
+
+          RESULTS = results;
+          NAMES = results.names;
+          console.log(RESULTS, NAMES);
+
+          let _names = results.names;
+          for (let i = 0; i < _names.length; i++) {
+            const name = _names[i];
+            // console.log(name);
+          }
+
+        }
+      }).done(function () {
+        console.log('done');
+
+      }).fail(function () {
+        console.log('ajax call failed');
+
+      }).always(function () {
+        console.log('complete');
+
+      })
+
+
+
+
+      $("#nameSearch").submit(function (event) {
+        event.preventDefault();
+
+        var submittedName = $("#firstName").val()
+        submittedName = submittedName.toLowerCase();
+        console.log('You typed: ', submittedName);
+
+        for (let i = 0; i < NAMES.length; i++) {
+
+          var name = NAMES[i];
+          name = name.toLowerCase();
+
+          if (submittedName === name) {
+            $(".console").html(`We found ${name}! <br>`);
+            var secondArg = RESULTS[name];
+            $(".console").append(secondArg);
+            return;
+          } else {
+
+            $(".console").text("Not found!");
+          }
+
+        }
+
+      });
+
+    });
+
+
+    // GLOBAL AJAX EVENT HANDLER
+    $(document).ajaxStart(function () {
+      console.log('1. Triggered ajax {{ START }} handler.');
+    });
+    $(document).ajaxSend(function () {
+      console.log('2. Triggered ajax {{ SEND }} handler.');
+    });
+    $(document).ajaxSuccess(function () {
+      console.log('3. Triggered ajax {{ SUCCESS }} handler.');
+    });
+    $(document).ajaxComplete(function () {
+      console.log('4. Triggered ajax {{ COMPLETE }} handler.');
+    });
+    $(document).ajaxStop(function () {
+      console.log('5. Triggered ajax {{ STOP }} handler.');
+    });
+    $(document).ajaxError(function () {
+      $(".log").text("Triggered ajax {{ ERROR }} handler.");
+    });
+
+
+
+    // Vanilla JAVASCRIPT WAY
+    var request;
+    if(window.XMLHttpRequest){
+      request = new XMLHttpRequest();
+    }else{
+      request = new ActiveXObject('Microsoft.XMLHTTP')
+    }
+    request.open('GET', './obj.json');
+    request.send();
+
+
+    var str = "       Hello World!        ";
+    console.log(str.trim());
+
+
+    $(".data_button").click(function () {
+      if (request.status === 200 && request.readyState === 4) {
+        console.log(request.responseText);
+        console.log(request.statusText);
+        
+        var result_in_JSON = jQuery.parseJSON( request.responseText );
+
+        $(".add").html(`${result_in_JSON.state} (From data.txt) `);
+      }
+    });
+    $(".data2_button").click(function () {
+      if (request.status === 200) {
+        console.log(request.responseText);
+        console.log(request.statusText);
+        console.log(request);
+        $(".add").html(`${request.response} (From data.txt) `);
+      }
+    });
+
+    $('#firstName').change(function () {
+      console.log('typing');
+
+    })
+
+    // JQUERT WAYS AJAX
+    $(document).ready(function () {
+      $(".json_button").click(function () {
+        $.ajax({
+          url: "./obj.json",
+          success: function (result) {
+            $(".add").html(`${result.state} (from obj.json)`);
+          }
+        });
+      });
+
+
+    });
+
+    // JQUERY LOAD()
+    $('.btn').click(function (e) {
+
+      e.preventDefault();
+
+      switch ($(this).attr('href')) {
+        case 'flower.html':
+          console.log('flower');
+          $('.add').load('flower.html')
+
+          break;
+        case 'gun.html':
+          console.log('gun');
+          $('.add').load('gun.html')
+
+          break;
+        case 'box.html':
+          console.log('box');
+          $('.add').load('box.html')
+
+          break;
+
+        default:
+          break;
+      }
+    })
+
+
+    // JQUERY GETJSON
+
+    $.getJSON("./obj.json", function (data) {
+      var items = [];
+      $.each(data, function (key, val) {
+        items.push("<li id='" + key + "'>" + val + "</li>");
+      });
+
+      $("<ul/>", {
+        "class": "my-new-list",
+        html: items.join("")
+      }).appendTo("body");
+    });
+
+    // JQUERY GETJSON
+    var jqxhr = $.getJSON("./obj.json", function (res) {
+        console.log(res);
+      })
+      .done(function () {
+        console.log("second success");
+      })
+      .fail(function () {
+        console.log("error");
+      })
+      .always(function () {
+        console.log("complete");
+      });
+
+    //flicker API
+    (function () {
+      var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
+      $.getJSON(flickerAPI, {
+          tags: "mount rainier",
+          tagmode: "any",
+          format: "json"
+        })
+        .done(function (data) {
+          console.log(data.items[0].media.m);
+
+          $.each(data.items, function (i, item) {
+            $("<img>").attr("src", item.media.m).appendTo("#images");
+            if (i === 3) {
+              return false;
+            }
+          });
+        });
+    })();
+
+
+
+    // XML LOAD
+    var XML_request;
+    if(window.XMLHttpRequest){
+      XML_request = new XMLHttpRequest()
+    }else{
+      XML_request = new ActiveXObject('Microsoft.XMLHTTP')
+    }
+    XML_request.open('GET', './breakfast_menu.xml')
+    XML_request.send();
+    
+    XML_request.onreadystatechange = function(){
+      if((XML_request.readyState === 4) && (XML_request.status === 200)){
+        
+        console.log(XML_request.responseXML.getElementsByTagName('name')[2].firstChild.nodeValue);
+        
+        var items = XML_request.responseXML.getElementsByTagName('name');
+        
+        var output = '<ul>';
+        for (let i = 0; i < items.length; i++){
+          output += '<li>' + items[i].firstChild.nodeValue + '</li>';
+        }
+        output += '</ul>';
+
+        $('.XML_div').html(output)
+
+      }else{
+        console.log('failed!!!!!!!');
+      }
+    }
+  </script>
+</body>
+
+</html>
