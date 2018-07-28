@@ -47,6 +47,7 @@
   <div class="XML_div"></div>
   <p>Below is JSON object value lists</p>
   <script>
+    // NAME SEARCH 
     $(document).ready(function () {
 
       var NAMES = [];
@@ -61,12 +62,6 @@
           NAMES = results.names;
           console.log(RESULTS, NAMES);
 
-          let _names = results.names;
-          for (let i = 0; i < _names.length; i++) {
-            const name = _names[i];
-            // console.log(name);
-          }
-
         }
       }).done(function () {
         console.log('done');
@@ -78,8 +73,6 @@
         console.log('complete');
 
       })
-
-
 
 
       $("#nameSearch").submit(function (event) {
@@ -103,11 +96,8 @@
 
             $(".console").text("Not found!");
           }
-
         }
-
       });
-
     });
 
 
@@ -135,9 +125,9 @@
 
     // Vanilla JAVASCRIPT WAY
     var request;
-    if(window.XMLHttpRequest){
+    if (window.XMLHttpRequest) {
       request = new XMLHttpRequest();
-    }else{
+    } else {
       request = new ActiveXObject('Microsoft.XMLHTTP')
     }
     request.open('GET', './obj.json');
@@ -152,8 +142,8 @@
       if (request.status === 200 && request.readyState === 4) {
         console.log(request.responseText);
         console.log(request.statusText);
-        
-        var result_in_JSON = jQuery.parseJSON( request.responseText );
+
+        var result_in_JSON = jQuery.parseJSON(request.responseText);
 
         $(".add").html(`${result_in_JSON.state} (From data.txt) `);
       }
@@ -182,8 +172,6 @@
           }
         });
       });
-
-
     });
 
     // JQUERY LOAD()
@@ -266,30 +254,30 @@
 
     // XML LOAD
     var XML_request;
-    if(window.XMLHttpRequest){
+    if (window.XMLHttpRequest) {
       XML_request = new XMLHttpRequest()
-    }else{
+    } else {
       XML_request = new ActiveXObject('Microsoft.XMLHTTP')
     }
     XML_request.open('GET', './breakfast_menu.xml')
     XML_request.send();
-    
-    XML_request.onreadystatechange = function(){
-      if((XML_request.readyState === 4) && (XML_request.status === 200)){
-        
+
+    XML_request.onreadystatechange = function () {
+      if ((XML_request.readyState === 4) && (XML_request.status === 200)) {
+
         console.log(XML_request.responseXML.getElementsByTagName('name')[2].firstChild.nodeValue);
-        
+
         var items = XML_request.responseXML.getElementsByTagName('name');
-        
+
         var output = '<ul>';
-        for (let i = 0; i < items.length; i++){
+        for (let i = 0; i < items.length; i++) {
           output += '<li>' + items[i].firstChild.nodeValue + '</li>';
         }
         output += '</ul>';
 
         $('.XML_div').html(output)
 
-      }else{
+      } else {
         console.log('failed!!!!!!!');
       }
     }
